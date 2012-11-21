@@ -106,7 +106,7 @@ string CBC(string key, string plaintext, string IV, int rounds)
 	//Do [rounds] of SDES on each block of ciphertext using CBC Mode
 	//P1 XOR C0
 	ciphertext1 = XOR(ciphertext1, IV);
-	//Ek(P1 XOR C0)
+	//Ek(P1 XOR IV)
 	for(int i = 1; i <= rounds; i++)
 		ciphertext1 = SDESEncryption(key, ciphertext1, i);
 	//P2 XOR C1
@@ -151,17 +151,17 @@ string CBCDecryption(string key, string ciphertext, string IV, int rounds)
 	//Dk(C3)
 	for(int i = rounds; i > 0; i--)
 		plaintext3 = SDESDecryption(key, plaintext3, i);
-	//P4 = C3 XOR Dk(C4)
+	//P4 = C2 XOR Dk(C3)
 	plaintext3 = XOR(plaintext2, plaintext3);
 	//Dk(C2)
 	for(int i = rounds; i > 0; i--)
 		plaintext2 = SDESDecryption(key, plaintext2, i);
-	//P4 = C3 XOR Dk(C4)
+	//P4 = C1 XOR Dk(C2)
 	plaintext2 = XOR(plaintext1, plaintext2);
 	//Dk(C1)
 	for(int i = rounds; i > 0; i--)
 		plaintext1 = SDESDecryption(key, plaintext1, i);
-	//P4 = C3 XOR Dk(C4)
+	//P4 = IV XOR Dk(C1)
 	plaintext1 = XOR(IV, plaintext1);
 	
 	// Return the plaintext
