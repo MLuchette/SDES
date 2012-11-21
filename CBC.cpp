@@ -151,17 +151,17 @@ string CBCDecryption(string key, string ciphertext, string IV, int rounds)
 	//Dk(C3)
 	for(int i = rounds; i > 0; i--)
 		plaintext3 = SDESDecryption(key, plaintext3, i);
-	//P4 = C2 XOR Dk(C3)
+	//P3 = C2 XOR Dk(C3)
 	plaintext3 = XOR(plaintext2, plaintext3);
 	//Dk(C2)
 	for(int i = rounds; i > 0; i--)
 		plaintext2 = SDESDecryption(key, plaintext2, i);
-	//P4 = C1 XOR Dk(C2)
+	//P2 = C1 XOR Dk(C2)
 	plaintext2 = XOR(plaintext1, plaintext2);
 	//Dk(C1)
 	for(int i = rounds; i > 0; i--)
 		plaintext1 = SDESDecryption(key, plaintext1, i);
-	//P4 = IV XOR Dk(C1)
+	//P1 = IV XOR Dk(C1)
 	plaintext1 = XOR(IV, plaintext1);
 	
 	// Return the plaintext
